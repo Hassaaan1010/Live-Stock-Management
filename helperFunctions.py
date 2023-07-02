@@ -3,6 +3,9 @@ import datetime as dt
 import json
 from datetime import datetime, timedelta
 
+miscFileObject = open("miscData.json", "r+")
+misc_data = json.load(miscFileObject)
+
 
 # OBJECT DEFINITIONS
 class ANIMAL:
@@ -124,18 +127,44 @@ def getNewDate(today):
 
 def askTaskChoice():
     choice = (
-        input(
-            """Choose your task:
+        (
+            input(
+                """Choose your task:
+Enter 'new' to make new entries 
+Enter 'update' to update entries
+Enter 'delete' to delete entries
+Enter 'details' to get details of an entry
+Enter 'add' to add last health checkup date
+"""
+            )
+            .lower()
+            .strip()
+        )
+        if (misc_data["flag"] == 0)
+        else (
+            input(
+                """Choose your task:
 Enter 'new' to make new entries 
 Enter 'update' to update entries
 Enter 'delete' to delete entries
 Enter 'details' to get details of an entry
 """
+            )
+            .lower()
+            .strip()
         )
-        .lower()
-        .strip()
     )
-    if choice in ["new", "update", "delete", "details"]:
+
+    if misc_data["flag"] == 0 and choice in [
+        "new",
+        "update",
+        "delete",
+        "details",
+        "add",
+    ]:
+        print("*" * 20)
+        return choice
+    elif misc_data["flag"] == 1 and choice in ["new", "update", "delete", "details"]:
         print("*" * 20)
         return choice
     else:
@@ -280,30 +309,26 @@ def showEntry(animal_data_dictionary, AnimalChoice):
         showEntry(animal_data_dictionary, AnimalChoice)
 
 
-def get_age_in_months():
-    INPUT = input("Enter date of birth (mm/dd/yy):")
-
-
 def print_todays_vaccinations(animal1_data, animal2_data, animal3_data):
     # prints due vaccination for each animal
     today = getTodaysDate()
     todays_list = {"chickens": [], "cows": [], "sheep": []}
     for animal1 in animal1_data:
-        if animal1_data[animal1]["next_vaccination_date"] == today:
+        if animal1_data[animal1]["next_vaccination_date"] <= today:
             todays_list["chickens"].append(animal1_data[animal1]["id"])
 
             animal1_data[animal1]["last_vaccination_date"] = today
             animal1_data[animal1]["next_vaccination_date"] = getNewDate(today)
 
     for animal2 in animal2_data:
-        if animal2_data[animal2]["next_vaccination_date"] == today:
+        if animal2_data[animal2]["next_vaccination_date"] <= today:
             todays_list["cows"].append(animal2_data[animal2]["id"])
 
             animal2_data[animal2]["last_vaccination_date"] = today
             animal2_data[animal2]["next_vaccination_date"] = getNewDate(today)
 
     for animal3 in animal3_data:
-        if animal3_data[animal3]["next_vaccination_date"] == today:
+        if animal3_data[animal3]["next_vaccination_date"] <= today:
             todays_list["sheep"].append(animal3_data[animal3]["id"])
 
             animal3_data[animal3]["last_vaccination_date"] = today
@@ -335,10 +360,13 @@ Enter 'yes' or 'no'
         get_vaccinations_done()
 
 
-def health_check(animal):
-    if animal == "chicken":
-        pass
-    elif animal == "cow":
-        pass
-    elif animal == "sheep":
-        pass
+def get_next_health_check_date(last_date):
+    # Convert the last_vacc string to a datetime object
+    last_health_check_date = datetime.strptime(last_date, "%d/%m/%y")
+
+    # Calculate the next vaccination date as exactly 3 months after last_vacc
+    next_health_check_date = last_health_check_date + timedelta(days=7)
+
+    # Convert the next_vacc_date to the desired format (MM/YY)
+    next_health_check_vacc = next_health_check_date.strftime("%d/%m/%y")
+    return next_health_check_vacc

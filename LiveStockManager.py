@@ -16,6 +16,7 @@ import datetime as dt
 from datetime import datetime, timedelta
 import json
 from helperFunctions import *
+from termcolor import colored
 
 
 def retrieve_data_from_files():
@@ -35,6 +36,9 @@ def retrieve_data_from_files():
     sheepFileObject = open("sheepData.json", "r+")
     sheepData = json.load(sheepFileObject)
 
+    miscFileObject = open("miscData.json", "r+")
+    miscData = json.load(miscFileObject)
+
     return (
         chickenFileObject,
         chickenData,
@@ -42,6 +46,8 @@ def retrieve_data_from_files():
         cowData,
         sheepFileObject,
         sheepData,
+        miscFileObject,
+        miscData,
     )
 
 
@@ -50,6 +56,7 @@ def return_data_to_files():
     update_files(chicken_file_object, chicken_data)
     update_files(cow_file_object, cow_data)
     update_files(sheep_file_object, sheep_data)
+    update_files(misc_file_object, misc_data)
 
     print("\n\nAll data has been updated :) \n")
 
@@ -64,19 +71,28 @@ def return_data_to_files():
     cow_data,
     sheep_file_object,
     sheep_data,
+    misc_file_object,
+    misc_data,
 ) = retrieve_data_from_files()
 
-# todays_date = datetime.today().date()
-# latest_month =
+# Update health checkup dates weekly
+if getTodaysDate() >= misc_data["next_health_check_date"]:
+    misc_data["last_health_check_date"] = misc_data["next_health_check_date"]
+    misc_data["next_health_check_date"] = get_next_health_check_date(
+        misc_data["last_health_check_date"]
+    )
+
 
 print("Welcome to LiveStockManager.py \n")
+last_health_date = misc_data["last_health_check_date"]
+next_health_date = misc_data["next_health_check_date"]
 
-
+print(f"Last Health Checkup Date: {last_health_date}")
+print(f"Next Health Checkup Date: {next_health_date}")
 print_todays_vaccinations(chicken_data, cow_data, sheep_data)
 get_vaccinations_done()
 
-last_health_check = "02/06/23"
-
+# health_check()yes
 
 application_choice = True
 while application_choice == True:
@@ -142,8 +158,13 @@ while application_choice == True:
             else:
                 showEntry(sheep_data, "sheep")
             get_details_continue = askExit("seeing entries")
+    elif TaskChoice == "add":
+        misc_data["last_health_check_date"] = input(f"Give me the date mfer: ")
+        misc_data["flag"] = 1
+        misc_data["next_health_check_date"] = get_next_health_check_date(
+            misc_data["last_health_check_date"]
+        )
 
-        pass
     application_choice = askExit("managing livestock")
 
 return_data_to_files()
