@@ -61,6 +61,17 @@ def return_data_to_files():
     print("\n\nAll data has been updated :) \n")
 
 
+def health_check(animalType, animal_data_dictionary):
+    for animal in animal_data_dictionary:
+        print(
+            f"Previous weeks health status of {animalType}: {animal_data_dictionary[animal]['id']} : {animal_data_dictionary[animal]['health_status']} "
+        )
+
+        animal_data_dictionary[animal]["health_status"] = input(
+            f"Enter health status notes for {animalType}: {animal_data_dictionary[animal]['id']} : "
+        )
+
+
 # DRIVER CODE
 
 # retrieving data from files
@@ -75,15 +86,19 @@ def return_data_to_files():
     misc_data,
 ) = retrieve_data_from_files()
 
+
+print(colored("Welcome to LiveStockManager \n\n", "red", attrs=["bold", "underline"]))
+
 # Update health checkup dates weekly
 if getTodaysDate() >= misc_data["next_health_check_date"]:
+    print("Starting health checkup! \n")
     misc_data["last_health_check_date"] = misc_data["next_health_check_date"]
     misc_data["next_health_check_date"] = get_next_health_check_date(
         misc_data["last_health_check_date"]
     )
-
-
-print("Welcome to LiveStockManager.py \n")
+    health_check("chicken", chicken_data)
+    health_check("cow", cow_data)
+    health_check("sheep", sheep_data)
 last_health_date = misc_data["last_health_check_date"]
 next_health_date = misc_data["next_health_check_date"]
 

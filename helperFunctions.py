@@ -2,6 +2,8 @@
 import datetime as dt
 import json
 from datetime import datetime, timedelta
+from termcolor import colored
+
 
 miscFileObject = open("miscData.json", "r+")
 misc_data = json.load(miscFileObject)
@@ -126,33 +128,37 @@ def getNewDate(today):
 
 
 def askTaskChoice():
-    choice = (
-        (
-            input(
+    if misc_data["flag"] == 0:
+        print(
+            colored(
                 """Choose your task:
 Enter 'new' to make new entries 
 Enter 'update' to update entries
 Enter 'delete' to delete entries
 Enter 'details' to get details of an entry
 Enter 'add' to add last health checkup date
-"""
+""",
+                "blue",
+                attrs=["bold"],
             )
-            .lower()
-            .strip()
         )
-        if (misc_data["flag"] == 0)
-        else (
-            input(
+    else:
+        print(
+            colored(
                 """Choose your task:
 Enter 'new' to make new entries 
 Enter 'update' to update entries
 Enter 'delete' to delete entries
 Enter 'details' to get details of an entry
-"""
+""",
+                "blue",
+                attrs=["bold"],
             )
-            .lower()
-            .strip()
         )
+    choice = (
+        input().lower().strip()
+        if (misc_data["flag"] == 0)
+        else (input().lower().strip())
     )
 
     if misc_data["flag"] == 0 and choice in [
