@@ -1,6 +1,7 @@
 # Helper functions
 import datetime as dt
 import json
+from datetime import datetime, timedelta
 
 
 # OBJECT DEFINITIONS
@@ -9,16 +10,20 @@ class ANIMAL:
 
     def __init__(self, animal):
         self.id = input(f"Chose unique ID number for {animal}: ")
-        # calculting age of animal from date of birth
-        # self.dob = tuple(map(int, input("dd/mm/yy of birth :").split()))
-        # self.age = age(self.dob)
+
         self.weight = float(input("Weight in kgs: "))
 
-    # using datetime library we convert string input of date to datetime object for later use...
-    # self.strDate = input("Enter last vaccination data as dd/mm/yy: ")
-    # self.lastVaxDate = dt.datetime.strptime(
-    # self.strDate, "%d/%m/%y"
-    # ) last vaccination date
+        self.dobSTR = input("Enter date of birth in format dd/mm/yy: ")
+        self.dob = datetime.strptime(self.dobSTR, "%d/%m/%y")
+
+        self.lastVaxDate = datetime.strptime(
+            input("Enter dd/mm/yy of last vaccination :"), "%d/%m/%y"
+        )
+        self.lastVaxDateSTR = self.lastVaxDate.strftime("%d/%m/%y")
+
+        self.nextVaxDate = self.lastVaxDate + timedelta(days=3 * 30)
+        self.nextVaxDateSTR = self.nextVaxDate.strftime("%d/%m/%y")
+        self.health_status = input(f"Enter Health Status of Animal-{self.id}: ")
 
 
 class CHICKEN(ANIMAL):
@@ -34,10 +39,12 @@ class CHICKEN(ANIMAL):
     def info(self):
         L = {
             "id": self.id,
-            # "age": self.age,
+            "DOB": self.dobSTR,
             "weight": self.weight,
-            # "last_vax_date": self.lastVaxDate,
+            "last_vaccination_date": self.lastVaxDateSTR,
+            "next_vaccination_date": self.nextVaxDateSTR,
             "last_7_days": self.last_7_days,
+            "health_status": self.health_status,
         }
         return L
 
@@ -54,11 +61,13 @@ class COW(ANIMAL):
     def info(self):
         L = {
             "id": self.id,
-            # "age": self.age,
+            "DOB": self.dobSTR,
             "weight": self.weight,
-            # "last_vax_date": self.lastVaxDate,
+            "last_vaccination_date": self.lastVaxDateSTR,
+            "next_vaccination_date": self.nextVaxDateSTR,
             "last_7_days": self.last_7_days,
             "weekly_milk_production": self.weekly_milk_production,
+            "health_status": self.health_status,
         }
         return L
 
@@ -77,28 +86,56 @@ class SHEEP(ANIMAL):
     def info(self):
         L = {
             "id": self.id,
-            # "age": self.age,
+            "DOB": self.dobSTR,
             "weight": self.weight,
-            # "last_vax_date": self.lastVaxDate,
+            "last_vaccination_date": self.lastVaxDateSTR,
+            "next_vaccination_date": self.nextVaxDateSTR,
             "last_6_months": self.last_6_months,
+            "health_status": self.health_status,
         }
         return L
 
 
 # FUNCTION DEFINITIONS
+
+
+def getTodaysDate():
+    # returns todays date as dd/mm/yy string
+    date = datetime.today().date()
+    formated_date = date.strftime("%d/%m/%y")
+    return formated_date
+
+
+def getNewDate(today):
+    "gets a date 90 days from today"
+    last_vacc = today  # Example last vaccination date
+
+    # Convert the last_vacc string to a datetime object
+    last_vacc_date = datetime.strptime(last_vacc, "%d/%m/%y")
+
+    # Calculate the next vaccination date as exactly 3 months after last_vacc
+    next_vacc_date = last_vacc_date + timedelta(days=3 * 30)
+
+    # Convert the next_vacc_date to the desired format (DD/MM/YY)
+    next_vacc = next_vacc_date.strftime("%d/%m/%y")
+
+    return next_vacc
+
+
 def askTaskChoice():
     choice = (
         input(
             """Choose your task:
-Enter 'new' to make new enteries 
-Enter 'update' to update enteries
-Enter 'delete' to delete enteries
+Enter 'new' to make new entries 
+Enter 'update' to update entries
+Enter 'delete' to delete entries
+Enter 'details' to get details of an entry
 """
         )
         .lower()
         .strip()
     )
-    if choice in ["new", "update", "delete"]:
+    if choice in ["new", "update", "delete", "details"]:
         print("*" * 20)
         return choice
     else:
@@ -199,14 +236,14 @@ def newEntry(animal_data_dictionary, AnimalChoice):
         animal_data_dictionary[dummy.id] = dummy.info()
 
 
-def deleteEntery(animal_data_dictionary, AnimalChoice):
+def deleteEntry(animal_data_dictionary, AnimalChoice):
     selected_ID = input(
         f"""Enter ID number of {AnimalChoice} that is to be deleted: 
 (Enter 'exit' if you want to quit) : """
     ).strip()
     if selected_ID in animal_data_dictionary:
         del animal_data_dictionary[selected_ID]
-        print(f"{selected_ID} records deleted.\n")
+        print(f" records of {selected_ID} were deleted.\n")
     elif selected_ID.lower().strip() == "exit":
         pass
     else:
@@ -214,7 +251,7 @@ def deleteEntery(animal_data_dictionary, AnimalChoice):
         print(f"here is a list of all the {AnimalChoice} enteries :\n")
         for id in list(animal_data_dictionary.keys()):
             print(id)
-        deleteEntery(animal_data_dictionary, AnimalChoice)
+        deleteEntry(animal_data_dictionary, AnimalChoice)
 
 
 def update_files(file_object, animal_data):
@@ -222,3 +259,86 @@ def update_files(file_object, animal_data):
     json.dump(animal_data, file_object)
     file_object.truncate()
     file_object.close()
+
+
+def showEntry(animal_data_dictionary, AnimalChoice):
+    selected_ID_details = input(
+        f"""Enter ID number of {AnimalChoice}: 
+(Enter 'exit' if you want to quit) : """
+    ).strip()
+    if selected_ID_details.lower().strip() == "exit":
+        pass
+    elif selected_ID_details in animal_data_dictionary:
+        print(f"Details of {selected_ID_details}: ")
+        for detail in animal_data_dictionary[selected_ID_details]:
+            print(f"\t{detail}: {animal_data_dictionary[selected_ID_details][detail]}")
+    else:
+        print("ID not found!")
+        print(f"here is a list of all the {AnimalChoice} enteries :\n")
+        for id in list(animal_data_dictionary.keys()):
+            print(id)
+        showEntry(animal_data_dictionary, AnimalChoice)
+
+
+def get_age_in_months():
+    INPUT = input("Enter date of birth (mm/dd/yy):")
+
+
+def print_todays_vaccinations(animal1_data, animal2_data, animal3_data):
+    # prints due vaccination for each animal
+    today = getTodaysDate()
+    todays_list = {"chickens": [], "cows": [], "sheep": []}
+    for animal1 in animal1_data:
+        if animal1_data[animal1]["next_vaccination_date"] == today:
+            todays_list["chickens"].append(animal1_data[animal1]["id"])
+
+            animal1_data[animal1]["last_vaccination_date"] = today
+            animal1_data[animal1]["next_vaccination_date"] = getNewDate(today)
+
+    for animal2 in animal2_data:
+        if animal2_data[animal2]["next_vaccination_date"] == today:
+            todays_list["cows"].append(animal2_data[animal2]["id"])
+
+            animal2_data[animal2]["last_vaccination_date"] = today
+            animal2_data[animal2]["next_vaccination_date"] = getNewDate(today)
+
+    for animal3 in animal3_data:
+        if animal3_data[animal3]["next_vaccination_date"] == today:
+            todays_list["sheep"].append(animal3_data[animal3]["id"])
+
+            animal3_data[animal3]["last_vaccination_date"] = today
+            animal3_data[animal3]["next_vaccination_date"] = getNewDate(today)
+
+    print(f"List of vaccinations due for today ({today}): ")
+    for animal in todays_list:
+        print(animal, ":", todays_list[animal])
+
+
+def get_vaccinations_done():
+    status = (
+        input(
+            """Have you completed all vaccinations due for today? 
+Enter 'yes' or 'no'
+"""
+        )
+        .lower()
+        .strip()
+    )
+    if status in ["yes", "no"]:
+        if status == "yes":
+            return
+        else:
+            print("Cannot proceed with application without completing vaccinations")
+            get_vaccinations_done()
+    else:
+        print("Invalid input!")
+        get_vaccinations_done()
+
+
+def health_check(animal):
+    if animal == "chicken":
+        pass
+    elif animal == "cow":
+        pass
+    elif animal == "sheep":
+        pass

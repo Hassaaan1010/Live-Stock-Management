@@ -13,6 +13,7 @@ Exception handling for user input NOT DONE
 """
 
 import datetime as dt
+from datetime import datetime, timedelta
 import json
 from helperFunctions import *
 
@@ -20,7 +21,7 @@ from helperFunctions import *
 def retrieve_data_from_files():
     """READ ME
     (This funciton is not defined in helperFuncitons.py because there was some issue with file accessing...)
-    The entire data form <animal>_data.json file is stored into <animal>Data variable
+    The entire data form <animal>_data.json file is stored into <animal>Data variable using json.load()
     This variable is returned to <animal>_data variable during function call
     All the alterations are made in the application are made to <animal>_data variable
     At the end of the program the new <animal>_data is written back into the same file.
@@ -53,7 +54,7 @@ def return_data_to_files():
     print("\n\nAll data has been updated :) \n")
 
 
-# PROGRAM STARTS HERE
+# DRIVER CODE
 
 # retrieving data from files
 (
@@ -65,8 +66,16 @@ def return_data_to_files():
     sheep_data,
 ) = retrieve_data_from_files()
 
+# todays_date = datetime.today().date()
+# latest_month =
 
 print("Welcome to LiveStockManager.py \n")
+
+
+print_todays_vaccinations(chicken_data, cow_data, sheep_data)
+get_vaccinations_done()
+
+last_health_check = "02/06/23"
 
 
 application_choice = True
@@ -115,13 +124,26 @@ while application_choice == True:
         while delete_entry_continue == True:
             AnimalChoice = askAnimalChoice()
             if AnimalChoice == "chicken":
-                deleteEntery(chicken_data, "chicken")
+                deleteEntry(chicken_data, "chicken")
             elif AnimalChoice == "cow":
-                deleteEntery(cow_data, "cow")
+                deleteEntry(cow_data, "cow")
             else:
-                deleteEntery(sheep_data, "sheep")
+                deleteEntry(sheep_data, "sheep")
             delete_entry_continue = askExit("deleting entries")
 
+    elif TaskChoice == "details":
+        get_details_continue = True
+        while get_details_continue == True:
+            AnimalChoice = askAnimalChoice()
+            if AnimalChoice == "chicken":
+                showEntry(chicken_data, "chicken")
+            elif AnimalChoice == "cow":
+                showEntry(cow_data, "cow")
+            else:
+                showEntry(sheep_data, "sheep")
+            get_details_continue = askExit("seeing entries")
+
+        pass
     application_choice = askExit("managing livestock")
 
 return_data_to_files()
