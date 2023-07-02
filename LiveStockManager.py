@@ -17,6 +17,7 @@ from datetime import datetime, timedelta
 import json
 from helperFunctions import *
 from termcolor import colored
+import time
 
 
 def retrieve_data_from_files():
@@ -58,18 +59,29 @@ def return_data_to_files():
     update_files(sheep_file_object, sheep_data)
     update_files(misc_file_object, misc_data)
 
-    print("\n\nAll data has been updated :) \n")
+    print(
+        colored(
+            "\n\nAll data has been updated :) \n", "light_cyan", attrs=["underline"]
+        )
+    )
 
 
 def health_check(animalType, animal_data_dictionary):
     for animal in animal_data_dictionary:
         print(
-            f"Previous weeks health status of {animalType}: {animal_data_dictionary[animal]['id']} : {animal_data_dictionary[animal]['health_status']} "
+            colored(
+                f"Previous weeks health status of {animalType}: {animal_data_dictionary[animal]['id']} : {animal_data_dictionary[animal]['health_status']} ",
+                "light_blue",
+            )
         )
 
-        animal_data_dictionary[animal]["health_status"] = input(
-            f"Enter health status notes for {animalType}: {animal_data_dictionary[animal]['id']} : "
+        print(
+            colored(
+                f"Enter health status notes for {animalType}: {animal_data_dictionary[animal]['id']} : ",
+                "light_blue",
+            )
         )
+        animal_data_dictionary[animal]["health_status"] = input()
 
 
 # DRIVER CODE
@@ -87,8 +99,12 @@ def health_check(animalType, animal_data_dictionary):
 ) = retrieve_data_from_files()
 
 
-print(colored("Welcome to LiveStockManager \n\n", "red", attrs=["bold", "underline"]))
-
+print(
+    colored(
+        "Welcome to LiveStockManager \n\n", "red", attrs=["bold", "dark", "underline"]
+    )
+)
+time.sleep(2)
 # Update health checkup dates weekly
 if getTodaysDate() >= misc_data["next_health_check_date"]:
     print("Starting health checkup! \n")
@@ -103,7 +119,9 @@ last_health_date = misc_data["last_health_check_date"]
 next_health_date = misc_data["next_health_check_date"]
 
 print(f"Last Health Checkup Date: {last_health_date}")
-print(f"Next Health Checkup Date: {next_health_date}")
+print(f"Next Health Checkup Date: {next_health_date}\n")
+time.sleep(1.5)
+
 print_todays_vaccinations(chicken_data, cow_data, sheep_data)
 get_vaccinations_done()
 

@@ -155,11 +155,7 @@ Enter 'details' to get details of an entry
                 attrs=["bold"],
             )
         )
-    choice = (
-        input().lower().strip()
-        if (misc_data["flag"] == 0)
-        else (input().lower().strip())
-    )
+    choice = input().lower().strip()
 
     if misc_data["flag"] == 0 and choice in [
         "new",
@@ -174,27 +170,34 @@ Enter 'details' to get details of an entry
         print("*" * 20)
         return choice
     else:
-        print("Invalid input!")
+        print(colored("Invalid input!", "red", attrs=["underline"]))
         return askTaskChoice()
 
 
 def askAnimalChoice():
-    choice = (
-        input(
+    print(
+        colored(
             """Which animal would you like to choose? 
 chicken
 cow
 sheep
- :- """
+ :- """,
+            "green",
+            attrs=["bold"],
         )
-        .lower()
-        .strip()
     )
+    choice = input().lower().strip()
     if choice in ["chicken", "cow", "sheep"]:
         print("_" * 20)
         return choice
     else:
-        print("Invalid input! Choose on of 'chicken','cow','sheep'")
+        print(
+            colored(
+                "Invalid input! Choose on of 'chicken','cow','sheep'",
+                "red",
+                attrs=["underline"],
+            )
+        )
         return askAnimalChoice()
 
     # Use Python's built-in datetime module
@@ -203,21 +206,26 @@ sheep
 
 
 def askExit(task):
-    choice = (
-        input(
+    print(
+        colored(
             f"""Do you want to continue {task} ?
-chose 'exit' or 'continue' """
+chose 'exit' or 'continue' """,
+            "red",
+            attrs=["dark"],
         )
-        .lower()
-        .strip()
     )
+    choice = input().lower().strip()
     if choice in ["exit", "continue"]:
         if choice == "exit":
             return False
         else:
             return True
     else:
-        print('Invalid input! Chose "exit" or "continue"')
+        print(
+            colored(
+                'Invalid input! Chose "exit" or "continue"', "red", attrs=["underline"]
+            )
+        )
         return askExit(task)
 
 
@@ -257,7 +265,14 @@ def sheering_update(a_sheep_dictionary):
 
 
 def newEntry(animal_data_dictionary, AnimalChoice):
-    N = int(input(f"How many new {AnimalChoice} enteries do you want? : "))
+    print(
+        colored(
+            f"How many new {AnimalChoice} enteries do you want? : ",
+            "magenta",
+            attrs=["underline"],
+        )
+    )
+    N = int(input())
     for i in range(N):
         # dummy = animal_object_dictionary[AnimalChoice]
 
@@ -272,17 +287,26 @@ def newEntry(animal_data_dictionary, AnimalChoice):
 
 
 def deleteEntry(animal_data_dictionary, AnimalChoice):
-    selected_ID = input(
-        f"""Enter ID number of {AnimalChoice} that is to be deleted: 
-(Enter 'exit' if you want to quit) : """
-    ).strip()
+    print(
+        colored(
+            f"""Enter ID number of {AnimalChoice} that is to be deleted: 
+(Enter 'exit' if you want to quit) : """,
+            "light_red",
+        )
+    )
+    selected_ID = input().strip()
     if selected_ID in animal_data_dictionary:
         del animal_data_dictionary[selected_ID]
-        print(f" records of {selected_ID} were deleted.\n")
+        print(
+            colored(
+                f" records of {selected_ID} were deleted.\n",
+                "red",
+            )
+        )
     elif selected_ID.lower().strip() == "exit":
         pass
     else:
-        print("ID not found!")
+        print(colored("ID not found!", "red", attrs=["underline"]))
         print(f"here is a list of all the {AnimalChoice} enteries :\n")
         for id in list(animal_data_dictionary.keys()):
             print(id)
@@ -297,18 +321,22 @@ def update_files(file_object, animal_data):
 
 
 def showEntry(animal_data_dictionary, AnimalChoice):
-    selected_ID_details = input(
-        f"""Enter ID number of {AnimalChoice}: 
-(Enter 'exit' if you want to quit) : """
-    ).strip()
+    print(
+        colored(
+            f"""Enter ID number of {AnimalChoice}: 
+(Enter 'exit' if you want to quit) : """,
+            "light_green",
+        )
+    )
+    selected_ID_details = input().strip()
     if selected_ID_details.lower().strip() == "exit":
         pass
     elif selected_ID_details in animal_data_dictionary:
-        print(f"Details of {selected_ID_details}: ")
+        print(colored(f"Details of {selected_ID_details}: ", "light_green"))
         for detail in animal_data_dictionary[selected_ID_details]:
             print(f"\t{detail}: {animal_data_dictionary[selected_ID_details][detail]}")
     else:
-        print("ID not found!")
+        print(colored("ID not found!", "red", attrs=["underline"]))
         print(f"here is a list of all the {AnimalChoice} enteries :\n")
         for id in list(animal_data_dictionary.keys()):
             print(id)
@@ -340,29 +368,44 @@ def print_todays_vaccinations(animal1_data, animal2_data, animal3_data):
             animal3_data[animal3]["last_vaccination_date"] = today
             animal3_data[animal3]["next_vaccination_date"] = getNewDate(today)
 
-    print(f"List of vaccinations due for today ({today}): ")
+    print(
+        colored(
+            f"List of vaccinations due for today ({today}): ",
+            "yellow",
+            attrs=[
+                "underline",
+            ],
+        )
+    )
     for animal in todays_list:
-        print(animal, ":", todays_list[animal])
+        print(colored(f"{animal} : {todays_list[animal]}", "yellow"))
 
 
 def get_vaccinations_done():
-    status = (
-        input(
+    print(
+        colored(
             """Have you completed all vaccinations due for today? 
 Enter 'yes' or 'no'
-"""
+""",
+            "yellow",
+            attrs=["underline"],
         )
-        .lower()
-        .strip()
     )
+    status = input().lower().strip()
     if status in ["yes", "no"]:
         if status == "yes":
             return
         else:
-            print("Cannot proceed with application without completing vaccinations")
+            print(
+                colored(
+                    "Cannot proceed with application without completing vaccinations",
+                    "red",
+                    attrs=["underline"],
+                )
+            )
             get_vaccinations_done()
     else:
-        print("Invalid input!")
+        print(colored("Invalid input!", "red", attrs=["underline"]))
         get_vaccinations_done()
 
 
