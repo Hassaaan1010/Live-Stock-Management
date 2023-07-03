@@ -101,12 +101,16 @@ def health_check(animalType, animal_data_dictionary):
 
 print(
     colored(
-        "Welcome to LiveStockManager \n\n", "red", attrs=["bold", "dark", "underline"]
+        "Welcome to LiveStockManager \n\n",
+        "red",
+        attrs=["bold", "dark", "underline"],
+        on_color="on_white",
     )
 )
 time.sleep(2)
 # Update health checkup dates weekly
-if getTodaysDate() >= misc_data["next_health_check_date"]:
+
+if misc_data["flag"] == 1 and getTodaysDate() >= misc_data["next_health_check_date"]:
     print("Starting health checkup! \n")
     misc_data["last_health_check_date"] = misc_data["next_health_check_date"]
     misc_data["next_health_check_date"] = get_next_health_check_date(
@@ -191,6 +195,7 @@ while application_choice == True:
             else:
                 showEntry(sheep_data, "sheep")
             get_details_continue = askExit("seeing entries")
+
     elif TaskChoice == "add":
         misc_data["last_health_check_date"] = input(
             f"Enter date of last haelth check up: "

@@ -129,14 +129,19 @@ def getNewDate(today):
 
 def askTaskChoice():
     if misc_data["flag"] == 0:
+        alert_date_init = colored(
+            "Enter 'add' to initialize last health checkup date",
+            "red",
+            attrs=["blink"],
+        )
         print(
             colored(
-                """Choose your task:
+                f"""Choose your task:
+{alert_date_init}
 Enter 'new' to make new entries 
 Enter 'update' to update entries
 Enter 'delete' to delete entries
 Enter 'details' to get details of an entry
-Enter 'add' to add last health checkup date
 """,
                 "blue",
                 attrs=["bold"],
@@ -193,7 +198,7 @@ sheep
     else:
         print(
             colored(
-                "Invalid input! Choose on of 'chicken','cow','sheep'",
+                "Invalid input! Choose one of 'chicken','cow','sheep'",
                 "red",
                 attrs=["underline"],
             )
@@ -231,9 +236,12 @@ chose 'exit' or 'continue' """,
 
 def egg_production(a_chicken_dictionary):
     # this function should update the database
-    todays_production = int(
-        input(f"{a_chicken_dictionary['id']}: Number of eggs laid : ")
+    print(
+        colored(
+            f"{a_chicken_dictionary['id']}: Number of eggs laid : ", "yellow", end=""
+        )
     )
+    todays_production = int(input())
     last_7_days = a_chicken_dictionary["last_7_days"]
     if todays_production > 0:
         last_7_days.append(todays_production)
@@ -246,9 +254,14 @@ def egg_production(a_chicken_dictionary):
 
 
 def milk_production(a_cow_dictionary):  # this function should update the database
-    todays_production = float(
-        input(f"Liters of milk cow {a_cow_dictionary['id']} produced today: ")
+    print(
+        colored(
+            f"Liters of milk cow {a_cow_dictionary['id']} produced today: ",
+            "yellow",
+            end="",
+        )
     )
+    todays_production = float(input())
     # print(" Input can only be a real number. Try again. ")
     a_cow_dictionary["last_7_days"].pop(0)
     a_cow_dictionary["last_7_days"].append(todays_production)
@@ -256,12 +269,23 @@ def milk_production(a_cow_dictionary):  # this function should update the databa
 
 
 def sheering_update(a_sheep_dictionary):
-    a_sheep_dictionary["last_6_months"] = float(
-        input(f"Wool (in kg) produced by sheep {a_sheep_dictionary['id']} : ")
+    print(
+        colored(
+            f"Wool (in kg) produced by sheep {a_sheep_dictionary['id']} : ",
+            "yellow",
+            end="",
+        )
     )
-    a_sheep_dictionary["weight"] = float(
-        input(f"Weight (in kg) of sheep {a_sheep_dictionary['id']} after shearing: ")
+
+    a_sheep_dictionary["last_6_months"] = float(input())
+    print(
+        colored(
+            f"Weight (in kg) of sheep {a_sheep_dictionary['id']} after shearing: ",
+            "yellow",
+            end="",
+        )
     )
+    a_sheep_dictionary["weight"] = float(input())
 
 
 def newEntry(animal_data_dictionary, AnimalChoice):
@@ -270,6 +294,7 @@ def newEntry(animal_data_dictionary, AnimalChoice):
             f"How many new {AnimalChoice} enteries do you want? : ",
             "magenta",
             attrs=["underline"],
+            end="",
         )
     )
     N = int(input())
