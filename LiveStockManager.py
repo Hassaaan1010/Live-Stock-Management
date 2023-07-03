@@ -192,7 +192,9 @@ while application_choice == True:
                 showEntry(sheep_data, "sheep")
             get_details_continue = askExit("seeing entries")
     elif TaskChoice == "add":
-        misc_data["last_health_check_date"] = input(f"Give me the date mfer: ")
+        misc_data["last_health_check_date"] = input(
+            f"Enter date of last haelth check up: "
+        )
         misc_data["flag"] = 1
         misc_data["next_health_check_date"] = get_next_health_check_date(
             misc_data["last_health_check_date"]
