@@ -101,7 +101,7 @@ def health_check(animalType, animal_data_dictionary):
 
 print(
     colored(
-        "Welcome to LiveStockManager \n\n",
+        "\nWelcome to LiveStockManager \n\n",
         "red",
         attrs=["bold", "dark", "underline"],
         on_color="on_white",

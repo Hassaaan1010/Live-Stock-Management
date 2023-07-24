@@ -1,5 +1,5 @@
 {
   "flag": 0,
-  "last_health_check_date": null,
-  "next_health_check_date": null
+  "last_health_check_date": "None",
+  "next_health_check_date": "None"
 }

@@ -236,12 +236,11 @@ chose 'exit' or 'continue' """,
 
 def egg_production(a_chicken_dictionary):
     # this function should update the database
-    print(
-        colored(
-            f"{a_chicken_dictionary['id']}: Number of eggs laid : ", "yellow", end=""
+    todays_production = int(
+        input(
+            colored(f"{a_chicken_dictionary['id']}: Number of eggs laid : ", "yellow")
         )
     )
-    todays_production = int(input())
     last_7_days = a_chicken_dictionary["last_7_days"]
     if todays_production > 0:
         last_7_days.append(todays_production)
@@ -256,9 +255,7 @@ def egg_production(a_chicken_dictionary):
 def milk_production(a_cow_dictionary):  # this function should update the database
     print(
         colored(
-            f"Liters of milk cow {a_cow_dictionary['id']} produced today: ",
-            "yellow",
-            end="",
+            f"Liters of milk cow {a_cow_dictionary['id']} produced today: ", "yellow"
         )
     )
     todays_production = float(input())
@@ -271,9 +268,7 @@ def milk_production(a_cow_dictionary):  # this function should update the databa
 def sheering_update(a_sheep_dictionary):
     print(
         colored(
-            f"Wool (in kg) produced by sheep {a_sheep_dictionary['id']} : ",
-            "yellow",
-            end="",
+            f"Wool (in kg) produced by sheep {a_sheep_dictionary['id']} : ", "yellow"
         )
     )
 
@@ -294,7 +289,6 @@ def newEntry(animal_data_dictionary, AnimalChoice):
             f"How many new {AnimalChoice} enteries do you want? : ",
             "magenta",
             attrs=["underline"],
-            end="",
         )
     )
     N = int(input())
